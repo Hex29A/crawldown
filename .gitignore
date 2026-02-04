@@ -1,0 +1,26 @@
+# Binaries
+crawldown
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Output directories
+output/
+*.log
+
+# Go
+*.test
+*.out
+vendor/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
