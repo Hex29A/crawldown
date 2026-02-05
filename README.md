@@ -108,7 +108,8 @@ crawldown <URL> [flags]
 | `--exclude` | | URL patterns to exclude (can specify multiple) | none |
 | `--include` | | URL patterns to include (can specify multiple) | none |
 | `--allow-domain` | | Additional domains to crawl | none |
-| `--verbose` | `-v` | Enable detailed logging | `false` || `--insecure` | `-k` | Skip TLS certificate verification | `false` |
+| `--verbose` | `-v` | Enable detailed logging | `false` |
+| `--insecure` | `-k` | Skip TLS certificate verification | `false` |
 ### Depth Levels Explained
 
 - `--depth 0` - Only crawl the specified URL
