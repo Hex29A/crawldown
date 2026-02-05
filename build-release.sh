@@ -48,15 +48,37 @@ echo "Binaries in $OUTPUT_DIR:"
 ls -lh "$OUTPUT_DIR"
 echo ""
 
-# Calculate sizes
-echo "Binary sizes:"
+# Calculate sizes before compression
+echo "Binary sizes (before compression):"
 du -h "$OUTPUT_DIR"/* | sort -h
-
 echo ""
+
+# Compress with UPX if available
+if command -v upx &> /dev/null; then
+    echo "🗜️  Compressing binaries with UPX..."
+    echo ""
+    
+    for binary in "$OUTPUT_DIR"/*; do
+        echo "  Compressing $(basename "$binary")..."
+        upx --best --lzma "$binary"
+    done
+    
+    echo ""
+    echo "✓ Compression complete!"
+    echo ""
+    echo "Binary sizes (after UPX):"
+    du -h "$OUTPUT_DIR"/* | sort -h
+    echo ""
+else
+    echo "⚠️  UPX not found. Install with:"
+    echo "    apt install upx-ucl  (Ubuntu/Debian)"
+    echo "    brew install upx     (macOS)"
+    echo ""
+    echo "  Binaries are already stripped with -s -w flags"
+    echo ""
+fi
+
 echo "To upload to GitHub:"
 echo "1. Create release at https://github.com/Hex29A/crawldown/releases/new"
 echo "2. Tag: v${VERSION}"
 echo "3. Upload all files from ${OUTPUT_DIR}/"
-echo ""
-echo "Optional: Compress further with UPX"
-echo "  upx --best --lzma $OUTPUT_DIR/*"

@@ -12,6 +12,7 @@ type Config struct {
 	ExcludePatterns []string
 	IncludePatterns []string
 	Verbose        bool
+	InsecureTLS    bool
 }
 
 // New creates a new Config with defaults

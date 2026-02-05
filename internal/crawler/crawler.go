@@ -1,7 +1,9 @@
 package crawler
 
 import (
+	"crypto/tls"
 	"fmt"
+	"net/http"
 	"net/url"
 	"strings"
 
@@ -81,6 +83,13 @@ func (c *Crawler) createCollector() *colly.Collector {
 	}
 
 	collector := colly.NewCollector(options...)
+
+	// Configure TLS if needed
+	if c.config.InsecureTLS {
+		collector.WithTransport(&http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		})
+	}
 
 	// Set rate limit
 	collector.Limit(&colly.LimitRule{
