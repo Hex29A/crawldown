@@ -47,6 +47,9 @@ Download the latest release for your platform from the [releases page](https://g
 
 # Deep crawl with verbose output
 ./crawldown https://docs.example.com --depth 5 --verbose
+
+# Crawl site with self-signed certificate
+./crawldown https://example.com -k
 ```
 
 ## Usage
@@ -90,6 +93,11 @@ crawldown <URL> [flags]
 ./crawldown http://localhost:8080 --delay 100ms --depth 2
 ```
 
+**Crawl site with invalid/self-signed certificate:**
+```bash
+./crawldown https://internal.company.com -k --depth 3
+```
+
 ## Command-Line Options
 
 | Flag | Short | Description | Default |
@@ -100,8 +108,7 @@ crawldown <URL> [flags]
 | `--exclude` | | URL patterns to exclude (can specify multiple) | none |
 | `--include` | | URL patterns to include (can specify multiple) | none |
 | `--allow-domain` | | Additional domains to crawl | none |
-| `--verbose` | `-v` | Enable detailed logging | `false` |
-
+| `--verbose` | `-v` | Enable detailed logging | `false` || `--insecure` | `-k` | Skip TLS certificate verification | `false` |
 ### Depth Levels Explained
 
 - `--depth 0` - Only crawl the specified URL
