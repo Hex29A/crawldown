@@ -59,13 +59,15 @@ func (c *Crawler) Start() error {
 	// Wait for crawling to finish
 	collector.Wait()
 
-	// Create index
-	c.logger.Info("Creating index file...")
-	indexPath, err := c.output.CreateIndex()
-	if err != nil {
-		return fmt.Errorf("failed to create index: %w", err)
+	// Create index (only in normal mode)
+	if !c.output.IsMergeMode() {
+		c.logger.Info("Creating index file...")
+		indexPath, err := c.output.CreateIndex()
+		if err != nil {
+			return fmt.Errorf("failed to create index: %w", err)
+		}
+		c.logger.Info("Created index at %s", indexPath)
 	}
-	c.logger.Info("Created index at %s", indexPath)
 
 	return nil
 }
@@ -148,18 +150,27 @@ func (c *Crawler) processPage(e *colly.HTMLElement) {
 		return
 	}
 
-	// Format with frontmatter
-	finalMarkdown := converter.FormatWithFrontmatter(title, pageURL, markdown, excerpt)
+	if c.output.IsMergeMode() {
+		// Merge mode: buffer clean markdown (no frontmatter)
+		if err := c.output.BufferPage(pageURL, title, markdown); err != nil {
+			c.logger.PageFailed(pageURL, fmt.Sprintf("buffer failed: %v", err))
+			return
+		}
+		c.logger.PageCrawled(pageURL)
+		c.logger.Info("Buffered for merge: %s", title)
+	} else {
+		// Normal mode: format with frontmatter and save individually
+		finalMarkdown := converter.FormatWithFrontmatter(title, pageURL, markdown, excerpt)
 
-	// Save to file
-	filePath, err := c.output.SavePage(pageURL, title, finalMarkdown)
-	if err != nil {
-		c.logger.PageFailed(pageURL, fmt.Sprintf("save failed: %v", err))
-		return
+		filePath, err := c.output.SavePage(pageURL, title, finalMarkdown)
+		if err != nil {
+			c.logger.PageFailed(pageURL, fmt.Sprintf("save failed: %v", err))
+			return
+		}
+
+		c.logger.PageCrawled(pageURL)
+		c.logger.Info("Saved to %s", filePath)
 	}
-
-	c.logger.PageCrawled(pageURL)
-	c.logger.Info("Saved to %s", filePath)
 }
 
 func (c *Crawler) shouldCrawl(urlStr string) bool {

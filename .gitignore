@@ -1,12 +1,12 @@
 # Binaries
-crawldown
+/crawldown
 *.exe
 *.dll
 *.so
 *.dylib
 
 # Output directories
-output/
+/output/
 *.log
 
 # Go
