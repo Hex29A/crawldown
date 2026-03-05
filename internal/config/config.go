@@ -15,7 +15,12 @@ type Config struct {
 	InsecureTLS     bool
 	Merge           bool
 	MergeBatchSize  int
+	UserAgent       string
+	SourceURL       string // Original URL for local file mode metadata
 }
+
+// DefaultUserAgent is the default User-Agent string used for requests
+const DefaultUserAgent = "Mozilla/5.0 (compatible; CrawlDown/1.0; +https://github.com/hex29a/crawldown)"
 
 // New creates a new Config with defaults
 func New() *Config {
@@ -26,5 +31,6 @@ func New() *Config {
 		Verbose:        false,
 		Merge:          false,
 		MergeBatchSize: 50,
+		UserAgent:      DefaultUserAgent,
 	}
 }

@@ -15,6 +15,8 @@ Perfect for creating documentation archives, feeding content to LLMs, or buildin
 - 📊 **Progress Tracking** - Detailed logging and crawl statistics
 - 🔍 **URL Filtering** - Include/exclude patterns for precise control
 - 🌍 **Multi-Domain** - Optionally crawl across multiple domains
+- 📂 **Local HTML Files** - Process saved HTML files or directories (great for anti-bot sites)
+- 🔧 **Custom User-Agent** - Configurable User-Agent for compatibility
 
 ## Installation
 
@@ -50,6 +52,12 @@ Download the latest release for your platform from the [releases page](https://g
 
 # Crawl site with self-signed certificate
 ./crawldown https://example.com -k
+
+# Process a local HTML file (e.g., saved from archive.ph)
+./crawldown saved-page.html --source-url https://original-site.com/page
+
+# Process all HTML files in a directory
+./crawldown ./saved-pages/ --source-url https://original-site.com
 ```
 
 ## Usage
@@ -57,7 +65,7 @@ Download the latest release for your platform from the [releases page](https://g
 ### Basic Command
 
 ```bash
-crawldown <URL> [flags]
+crawldown <URL or FILE> [flags]
 ```
 
 ### Common Examples
@@ -110,6 +118,8 @@ crawldown <URL> [flags]
 | `--allow-domain` | | Additional domains to crawl | none |
 | `--verbose` | `-v` | Enable detailed logging | `false` |
 | `--insecure` | `-k` | Skip TLS certificate verification | `false` |
+| `--user-agent` | | Custom User-Agent string for HTTP requests | browser-like |
+| `--source-url` | | Original source URL (metadata for local file mode) | none |
 ### Depth Levels Explained
 
 - `--depth 0` - Only crawl the specified URL
@@ -273,6 +283,16 @@ For large sites (100+ pages):
 
 ## Troubleshooting
 
+### Anti-Bot Protection (429 Too Many Requests)
+
+Some sites like archive.ph use aggressive anti-bot protection:
+1. Save the page in your browser (Ctrl+S / Cmd+S)
+2. Process the saved HTML file locally:
+   ```bash
+   ./crawldown saved-page.html --source-url https://archive.ph/kIMZN
+   ```
+3. Or try a custom User-Agent: `--user-agent "Mozilla/5.0 ..."`
+
 ### No Content Extracted
 
 If pages have empty content:
@@ -308,6 +328,7 @@ crawldown/
 │   ├── crawler/            # Web crawling logic
 │   ├── extractor/          # Content extraction
 │   ├── converter/          # HTML to Markdown
+│   ├── localfile/          # Local HTML file processing
 │   ├── output/             # File management
 │   └── logger/             # Logging
 ├── go.mod

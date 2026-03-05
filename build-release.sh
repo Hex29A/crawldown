@@ -60,7 +60,7 @@ if command -v upx &> /dev/null; then
     
     for binary in "$OUTPUT_DIR"/*; do
         echo "  Compressing $(basename "$binary")..."
-        upx --best --lzma "$binary"
+        upx --best --lzma "$binary" 2>/dev/null || echo "    ⚠️  Skipped (unsupported format)"
     done
     
     echo ""

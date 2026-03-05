@@ -48,7 +48,14 @@ func (c *Crawler) Start() error {
 
 	// Handle errors
 	collector.OnError(func(r *colly.Response, err error) {
-		c.logger.PageFailed(r.Request.URL.String(), err.Error())
+		if r.StatusCode == 429 {
+			c.logger.PageFailed(r.Request.URL.String(),
+				fmt.Sprintf("HTTP 429 Too Many Requests - site has anti-bot protection. "+
+					"Try: save the page in your browser and use crawldown with the local file path instead. "+
+					"Example: crawldown page.html --source-url %s", r.Request.URL.String()))
+		} else {
+			c.logger.PageFailed(r.Request.URL.String(), err.Error())
+		}
 	})
 
 	// Start crawling
@@ -101,7 +108,7 @@ func (c *Crawler) createCollector() *colly.Collector {
 	})
 
 	// Set user agent
-	collector.UserAgent = "CrawlDown/1.0 (Website to Markdown Crawler)"
+	collector.UserAgent = c.config.UserAgent
 
 	// Respect robots.txt
 	collector.AllowURLRevisit = false
