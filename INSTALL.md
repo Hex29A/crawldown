@@ -31,6 +31,10 @@ go mod tidy
 # Build the binary
 go build -o crawldown ./cmd/crawldown
 
+# Build with version metadata
+go build -ldflags "-X main.version=v0.3.0 -X main.commit=$(git rev-parse --short HEAD) -X main.date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  -o crawldown ./cmd/crawldown
+
 # Or install globally
 go install ./cmd/crawldown
 ```
@@ -40,6 +44,9 @@ go install ./cmd/crawldown
 ```bash
 # After building, run:
 ./crawldown https://example.com
+
+# Check version information
+./crawldown --version
 
 # With options:
 ./crawldown https://example.com \
@@ -72,4 +79,7 @@ GOOS=darwin GOARCH=amd64 go build -o crawldown-macos ./cmd/crawldown
 
 # For Windows
 GOOS=windows GOARCH=amd64 go build -o crawldown.exe ./cmd/crawldown
+
+# Cross-compile with version metadata
+GOOS=linux GOARCH=amd64 go build -ldflags "-X main.version=v0.3.0 -X main.commit=$(git rev-parse --short HEAD) -X main.date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" -o crawldown-linux ./cmd/crawldown
 ```

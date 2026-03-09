@@ -16,7 +16,14 @@ import (
 var (
 	cfg     *config.Config
 	rootCmd *cobra.Command
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
 )
+
+func buildVersion() string {
+	return fmt.Sprintf("%s (commit: %s, built: %s)", version, commit, date)
+}
 
 func init() {
 	cfg = config.New()
@@ -53,6 +60,17 @@ CrawlDown on the saved file.`,
 		Args: cobra.ExactArgs(1),
 		RunE: run,
 	}
+
+	rootCmd.Version = buildVersion()
+	rootCmd.SetVersionTemplate("{{.Version}}\n")
+	rootCmd.AddCommand(&cobra.Command{
+		Use:   "version",
+		Short: "Print CrawlDown version information",
+		Args:  cobra.NoArgs,
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println(buildVersion())
+		},
+	})
 
 	// Flags
 	rootCmd.Flags().IntVarP(&cfg.MaxDepth, "depth", "d", 3, "Maximum crawl depth")

@@ -2,6 +2,8 @@
 set -e
 
 VERSION=${1:-"dev"}
+COMMIT=${2:-$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")}
+BUILD_DATE=${3:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}
 OUTPUT_DIR="./dist"
 
 echo "Building CrawlDown v${VERSION}"
@@ -14,11 +16,15 @@ mkdir -p "$OUTPUT_DIR"
 # Build flags:
 # -s: omit symbol table
 # -w: omit DWARF symbol table
-# -X: inject version info
-LDFLAGS="-s -w -X main.version=${VERSION}"
+# -X: inject version/build info
+LDFLAGS="-s -w -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.date=${BUILD_DATE}"
 
 echo ""
 echo "Building binaries..."
+echo ""
+echo "Version: ${VERSION}"
+echo "Commit: ${COMMIT}"
+echo "Build date (UTC): ${BUILD_DATE}"
 echo ""
 
 # Linux AMD64

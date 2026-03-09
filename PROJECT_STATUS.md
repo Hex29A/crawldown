@@ -20,6 +20,7 @@
 - [x] Domain filtering with allow/exclude patterns
 - [x] Progress logging to file
 - [x] Comprehensive error handling
+- [x] Version metadata via --version / version command
 
 ## Tested On
 

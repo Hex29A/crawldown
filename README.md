@@ -68,6 +68,16 @@ Download the latest release for your platform from the [releases page](https://g
 crawldown <URL or FILE> [flags]
 ```
 
+### Version
+
+```bash
+# Show version via flag
+./crawldown --version
+
+# Or via subcommand
+./crawldown version
+```
+
 ### Common Examples
 
 **Crawl a blog with depth limit:**
@@ -120,6 +130,16 @@ crawldown <URL or FILE> [flags]
 | `--insecure` | `-k` | Skip TLS certificate verification | `false` |
 | `--user-agent` | | Custom User-Agent string for HTTP requests | browser-like |
 | `--source-url` | | Original source URL (metadata for local file mode) | none |
+| `--version` | | Print version information and exit | `false` |
+
+## Build Metadata
+
+For release builds, inject version metadata so `--version` shows the tag, commit, and build time:
+
+```bash
+go build -ldflags "-X main.version=v0.3.0 -X main.commit=$(git rev-parse --short HEAD) -X main.date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  -o crawldown ./cmd/crawldown
+```
 ### Depth Levels Explained
 
 - `--depth 0` - Only crawl the specified URL
