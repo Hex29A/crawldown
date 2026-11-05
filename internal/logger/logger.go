@@ -101,6 +101,6 @@ Crawl Summary:
 
 // Close closes the log file
 func (l *Logger) Close() error {
-	l.Info(l.Summary())
+	l.Info("%s", l.Summary())
 	return l.file.Close()
 }
